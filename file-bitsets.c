@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<stdint.h>
 
+//@author: Matthew Carey
 
 const size_t SETSIZE = sizeof( uint64_t) << 3 ;
 const size_t BUFSIZE = 256;
@@ -18,6 +19,7 @@ uint64_t file_set_encode( FILE * fp ){
 		string[counter]=ch;
 		counter++;
 	}
+	string[counter]='\0';
 	return set_encode(string);
 }
 
@@ -111,6 +113,7 @@ size_t set_cardinality( uint64_t set ) {
 char * set_decode( uint64_t set ) {
 	char* reference = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.0123456789,abcdefghijklmnopqrstuvwxyz";
 	char* result = malloc(BUFSIZE);
+	char temp;
 	int x = 0;
 	for(int i=0; set!=0; i++){
 		//set=set>>1;
@@ -119,6 +122,16 @@ char * set_decode( uint64_t set ) {
 			x++;
 		}
 		set=set>>1;
+	}
+	int len = x-1;
+	for(int i=0; i<x-1;i++){
+		temp = result[len];
+		result[len] = result[i];
+		result[i]=temp;
+		len--;
+		if(len==(x-1)/2){
+			break;
+		}	
 	}
 	result[x]='\0';
 	return result;
@@ -155,8 +168,8 @@ int main(int argc, char* argv[]){
 	printf("set2:	%#.16lx\n\n",long2);
 	printf("set_intersect:	%#.16lx\n",set_intersect(long1,long2));
 	printf("set_union:	%#.16lx\n\n",set_union(long1,long2));
-	printf("set1: set_complement:	%#.16lx\n",set_complement(long1));
-	printf("set2: set_complement:	%#.16lx\n\n",set_complement(long2));
+	printf("set1 set_complement:	%#.16lx\n",set_complement(long1));
+	printf("set2 set_complement:	%#.16lx\n\n",set_complement(long2));
 	printf("set_difference:		%#.16lx\n",set_difference(long1,long2));
 	printf("set_symdifference:	%#.16lx\n\n",set_symdifference(long1,long2));
 	printf("set1 set_cardinality:	%ld\n",set_cardinality(long1));

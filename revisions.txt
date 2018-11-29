@@ -1,0 +1,54 @@
+commit da8ef92506b7b3f228a918b2484b158e88972fbb
+Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
+Date:   Thu Nov 29 13:12:28 2018 -0500
+
+    added documentation
+
+commit ea4a6b75683a63811bb735769172146b85ca0bfe
+Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
+Date:   Thu Nov 29 12:50:11 2018 -0500
+
+    I changed the file checking to check each parameter separetely, now I'm
+    going moving on to documentation.
+
+commit ec62d24d509ff295145343249271227c96a5c054
+Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
+Date:   Thu Nov 29 12:45:16 2018 -0500
+
+    I finished the file reading function to read everything and then call
+    set_encode with the string. I also changed main to check for files and
+    act correctly if both parameters files.
+    Ok actually I just reread the hw sheet and I have to change my file checking to
+    make it separate for each parameter.
+
+commit 0b219633780323a3c701bc3124621f3db1525a02
+Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
+Date:   Thu Nov 29 12:15:37 2018 -0500
+
+    I finished the last three functions, the difference function,
+    cardinality and decode and I believe they all work fine now I'm going to
+    make it able to reads files as well.
+
+commit a73bfea1b66dd54f7f3107f8a41911338b3f6fc7
+Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
+Date:   Wed Nov 28 16:54:33 2018 -0500
+
+    I made it so the unsigned long values will print the correct length, I
+    also impletmented some of the other functions but have not tested them
+    yet.
+
+commit d2224dc1cc63511889ea564cf3ae3e0df8c7b5ee
+Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
+Date:   Tue Nov 27 17:38:29 2018 -0500
+
+    I made a test c file because I wasn't sure what the encode function was
+    asking us to do, I'll delete that.
+    I figured out how to get the result that encode is looking for I just
+    have to find out how to make it so it always prints with the same length.
+    I made a function called encodechar where I copy pasted the reference
+    letters/numbers and saved it as a string. I could have reversed the string
+    and used the index as the shifting value but that would take a long time
+    so I used modulo to get the shifting value from the oppasite index. This
+    function returns the uint64 version of a char.
+    I also finished set_encode, it just calls encodechar over and over and
+    uses | to add them together.
