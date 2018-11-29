@@ -55,11 +55,39 @@ uint64_t set_complement( uint64_t set1 ){
 
 
 uint64_t set_difference( uint64_t set1, uint64_t set2 ){
-	return set1 - set2;
+	uint64_t long1 =  (set1 ^ set2);//-set2;
+	uint64_t long2 = (set2 - (set1 & set2));
+	return long1-long2;
 }
-uint64_t set_symdifference( uint64_t set1, uint64_t set2 ) ;
-size_t set_cardinality( uint64_t set ) ;
-char * set_decode( uint64_t set ) ;
+uint64_t set_symdifference( uint64_t set1, uint64_t set2 ){
+	return set1 ^ set2;
+}
+size_t set_cardinality( uint64_t set ) {
+	int x = 0;
+	while(set!=0){
+		set=set>>1;
+		if(set%2==1){
+			x++;
+		}
+	}
+	return x;
+}
+
+char * set_decode( uint64_t set ) {
+	char* reference = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.0123456789,abcdefghijklmnopqrstuvwxyz";
+	char* result = malloc(BUFSIZE);
+	int x = 0;
+	for(int i=0; set!=0; i++){
+		//set=set>>1;
+		if(set%2==1){
+			result[x]=reference[-i+63];
+			x++;
+		}
+		set=set>>1;
+	}
+	result[x]='\0';
+	return result;
+}
 
 
 int main(int argc, char* argv[]){
@@ -69,7 +97,7 @@ int main(int argc, char* argv[]){
 	//
 	//check if the args are files, if not uses the string. 
 	
-	//printf("%#.16lx\n",set_encode("23"));
+	//igrintf("%#.16lx\n",set_encode("23"));
 	
 
 	if(argc<3){
@@ -84,8 +112,19 @@ int main(int argc, char* argv[]){
 	uint64_t long1 = set_encode(argv[1]);
 	uint64_t long2 = set_encode(argv[2]);
 	printf("set1:	%#.16lx\n",long1);
-	printf("set2:	%#.16lx\n",long2);
-	printf("\n");
-	
-	
+	printf("set2:	%#.16lx\n\n",long2);
+	printf("set_intersect:	%#.16lx\n",set_intersect(long1,long2));
+	printf("set_union:	%#.16lx\n\n",set_union(long1,long2));
+	printf("set1: set_complement:	%#.16lx\n",set_complement(long1));
+	printf("set2: set_complement:	%#.16lx\n\n",set_complement(long2));
+	printf("set_difference:		%#.16lx\n",set_difference(long1,long2));
+	printf("set_symdifference:	%#.16lx\n\n",set_symdifference(long1,long2));
+	printf("set1 set_cardinality:	%ld\n",set_cardinality(long1));
+	printf("set2 set_cardinality:	%ld\n\n",set_cardinality(long2));
+	char* decode1 = set_decode(long1);
+	char* decode2 = set_decode(long2);
+	printf("members of set1:	'%s'\n",decode1);
+	printf("members of set2:	'%s'\n",decode2);
+	free(decode1);
+	free(decode2);
 }
