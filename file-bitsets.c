@@ -2,7 +2,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdint.h>
-
+#include<errno.h>
+#include<inttypes.h>
 //@author: Matthew Carey
 
 const size_t SETSIZE = sizeof( uint64_t) << 3 ;
@@ -27,9 +28,10 @@ uint64_t file_set_encode( FILE * fp ){
 //this function is a helper for set_encode it converts one char to a 
 //uint64_t using the reference string and returns the uint64_t 
 uint64_t encodechar( char ch){
+	
 	char * reference = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.0123456789,abcdefghijklmnopqrstuvwxyz";
 	int x = -1;
-	for(int i =0; i<strlen(reference); i++){
+	for(int i =0; (unsigned)i<strlen(reference); i++){
 		if(reference[i]==ch){
 			x=(-i+63);//this is because the first letters in the 
 			//reference string are actually the highest bit order.
@@ -47,12 +49,12 @@ uint64_t encodechar( char ch){
 //this function encodes a string by calling encodechar on each char
 //and or'ing them all together then returning the result. 
 uint64_t set_encode( char * st ) {
-	static int i = 0;
-	i++;
-	printf("string%d:	%s",i,st);
-	printf("	Encoding the string:	%s\n",st);
+	//static int i = 0;
+	//i++;
+	//printf("string%d:	%s",i,st);
+	//printf("	Encoding the string:	%s\n",st);
 	int64_t code  = 0;
-	for(int i = 0; i<strlen(st); i++){
+	for(int i = 0; (unsigned)i<strlen(st); i++){
 		code = code | encodechar(st[i]);
 	}
 	return code;
@@ -142,36 +144,43 @@ char * set_decode( uint64_t set ) {
 //them accordingly and prints the result of multiple set operations. 
 int main(int argc, char* argv[]){ 
 	if(argc<3){//checks that there are enough arguments
-		perror("Usage: file-bitsets string1 string2");
-		exit(0);
+		fprintf(stderr,"Usage: file-bitsets string1 string2");
+		exit(1);
 	}
+		
 	FILE* file1;
 	FILE* file2;
 	uint64_t long1 = 0;
 	uint64_t long2 = 0;
-	if(file1=fopen(argv[1],"r")){//checks if the first argument is a file
+	printf("string1:	%s",argv[1]);
+	if((file1=fopen(argv[1],"r"))){//checks if the first argument is a file
+		printf("	Encoding the file:	%s\n",argv[1]);
 		long1 = file_set_encode(file1);
 		fclose(file1);	
 	}
 	else{//if not a file uses set_encode
 		long1 = set_encode(argv[1]);
+		printf("	Encoding the string:	%s\n",argv[1]);
 	}
-	if(file2=fopen(argv[2],"r")){//checks if the second argument is a file
+	printf("string2:	%s",argv[2]);
+	if((file2=fopen(argv[2],"r"))){//checks if the second argument is a file
+		printf("	Encoding the file:	%s\n",argv[2]);	
 		long2 = file_set_encode(file2);
 		fclose(file2);
 	}
 	else{//if not a file uses set_encode
 		long2 = set_encode(argv[2]);
+		printf("	Encoding the string:	%s\n",argv[2]);
 	}
 	printf("\n");
-	printf("set1:	%#.16lx\n",long1);
-	printf("set2:	%#.16lx\n\n",long2);
-	printf("set_intersect:	%#.16lx\n",set_intersect(long1,long2));
-	printf("set_union:	%#.16lx\n\n",set_union(long1,long2));
-	printf("set1 set_complement:	%#.16lx\n",set_complement(long1));
-	printf("set2 set_complement:	%#.16lx\n\n",set_complement(long2));
-	printf("set_difference:		%#.16lx\n",set_difference(long1,long2));
-	printf("set_symdifference:	%#.16lx\n\n",set_symdifference(long1,long2));
+	printf("set1:	%#018lx\n",long1);
+	printf("set2:	%#018lx\n\n",long2);
+	printf("set_intersect:	%#018lx\n",set_intersect(long1,long2));
+	printf("set_union:	%#018lx\n\n",set_union(long1,long2));
+	printf("set1 set_complement:	%#018lx\n",set_complement(long1));
+	printf("set2 set_complement:	%#018lx\n\n",set_complement(long2));
+	printf("set_difference:		%#018lx\n",set_difference(long1,long2));
+	printf("set_symdifference:	%#018lx\n\n",set_symdifference(long1,long2));
 	printf("set1 set_cardinality:	%ld\n",set_cardinality(long1));
 	printf("set2 set_cardinality:	%ld\n\n",set_cardinality(long2));
 	char* decode1 = set_decode(long1);//declares these two out of print statement so  
