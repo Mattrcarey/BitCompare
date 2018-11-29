@@ -6,12 +6,19 @@
 
 const size_t SETSIZE = sizeof( uint64_t) << 3 ;
 const size_t BUFSIZE = 256;
+uint64_t set_encode(char* ch);
 
 
-
-uint64_t file_set_encode( FILE * fp );
+uint64_t file_set_encode( FILE * fp ){
 	//reads the first two 2 words of the file and calls set_encode on them.
-
+	char string[BUFSIZE];// = "hello";
+	int counter = 0;
+	for(int ch = fgetc(fp); ch!=EOF; ch=fgetc(fp)){
+		string[counter]=ch;
+		counter++;
+	}
+	return set_encode(string);
+}
 
 uint64_t encodechar( char ch){
 	char * reference = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.0123456789,abcdefghijklmnopqrstuvwxyz";
@@ -31,7 +38,11 @@ uint64_t encodechar( char ch){
 
 uint64_t set_encode( char * st ) {
 	//turns the string into a binary
-	uint64_t code  = 0x0000000000000000;
+	static int i = 0;
+	i++;
+	printf("string%d:	%s",i,st);
+	printf("	Encoding the string:	%s\n",st);
+	int64_t code  = 0x0000000000000000;
 	for(int i = 0; i<strlen(st); i++){
 		code = code | encodechar(st[i]);
 	}
@@ -96,21 +107,31 @@ int main(int argc, char* argv[]){
 	//Then it reports the result of each operation.
 	//
 	//check if the args are files, if not uses the string. 
-	
-	//igrintf("%#.16lx\n",set_encode("23"));
-	
-
 	if(argc<3){
 		perror("Usage: file-bitsets string1 string2");
 		exit(0);
 	}
-	for(int i = 1; i < 3; i++){
-		printf("string%d:	%s",i,argv[i]);
-		printf("	Encoding the string:	%s\n",argv[i]);
-	}	
+	FILE* file1;
+	FILE* file2;
+	uint64_t long1 = 0;// = set_encode(argv[1]);
+	uint64_t long2 = 0;// = set_encode(argv[2]);
+	if(file1=fopen(argv[1],"r")){
+		if(file2=fopen(argv[2],"r")){
+			long1 = file_set_encode(file1);
+			long2 = file_set_encode(file2);
+			fclose(file2);
+		}
+		fclose(file1);
+	}
+	else{
+		long1 = set_encode(argv[1]);
+		long2 = set_encode(argv[2]);
+	}
+	//for(int i = 1; i < 3; i++){
+	//	printf("string%d:	%s",i,argv[i]);
+	//	printf("	Encoding the string:	%s\n",argv[i]);
+	//}	
 	printf("\n");
-	uint64_t long1 = set_encode(argv[1]);
-	uint64_t long2 = set_encode(argv[2]);
 	printf("set1:	%#.16lx\n",long1);
 	printf("set2:	%#.16lx\n\n",long2);
 	printf("set_intersect:	%#.16lx\n",set_intersect(long1,long2));
