@@ -116,21 +116,19 @@ int main(int argc, char* argv[]){
 	uint64_t long1 = 0;// = set_encode(argv[1]);
 	uint64_t long2 = 0;// = set_encode(argv[2]);
 	if(file1=fopen(argv[1],"r")){
-		if(file2=fopen(argv[2],"r")){
-			long1 = file_set_encode(file1);
-			long2 = file_set_encode(file2);
-			fclose(file2);
-		}
-		fclose(file1);
+		long1 = file_set_encode(file1);
+		fclose(file1);	
 	}
 	else{
 		long1 = set_encode(argv[1]);
+	}
+	if(file2=fopen(argv[2],"r")){
+		long2 = file_set_encode(file2);
+		fclose(file2);
+	}
+	else{
 		long2 = set_encode(argv[2]);
 	}
-	//for(int i = 1; i < 3; i++){
-	//	printf("string%d:	%s",i,argv[i]);
-	//	printf("	Encoding the string:	%s\n",argv[i]);
-	//}	
 	printf("\n");
 	printf("set1:	%#.16lx\n",long1);
 	printf("set2:	%#.16lx\n\n",long2);
