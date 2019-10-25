@@ -126,7 +126,8 @@ char * set_decode( uint64_t set ) {
 		set=set>>1;
 	}
 	int len = x-1;
-	for(int i=0; i<x-1;i++){
+	for(int i=0; i<x-1;i++){//this reverses the order of the string that I just build
+				// to match the output of the try tests. 
 		temp = result[len];
 		result[len] = result[i];
 		result[i]=temp;

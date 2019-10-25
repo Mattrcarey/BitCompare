@@ -1,3 +1,26 @@
+commit a24fcc743222af862f8cd4d1b158b3aa9f129072
+Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
+Date:   Thu Nov 29 14:29:18 2018 -0500
+
+    I changed the way my code prints the first two lines because I realised
+    after it prints string1: if its a file it prints the filename instead of
+    the string in the file. I fixed the error with 0's  printing with 2 less
+    zeros then the test by changing %#.16lx to %#018lx I also fixed a couple
+    minor warnings and changed my perror("...") call to fprintf(stderr,"...")
+    because I didnt want it to print success after printing the error and I
+    didn't want to print any of the default errno values.
+
+commit cb69d1d46cc3a67f5eea2fa13c974ed5b0b79da5
+Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
+Date:   Thu Nov 29 13:35:30 2018 -0500
+
+    when I did the try tests I found out one of my print statements wasnt
+    exactly the same, It work correctly if the file is empty, the code was
+    decoding the right letters but in the reverse order and when my code
+    prints and hex with value 0 it prints 2 less 0's than it should.
+    I fixed the print statement, the error with an empty file, I reversed my
+    decode string and now I just need to fix the 0 printing I think
+
 commit da8ef92506b7b3f228a918b2484b158e88972fbb
 Author: Matthew Reese Carey <mrc1613@cs.rit.edu>
 Date:   Thu Nov 29 13:12:28 2018 -0500
